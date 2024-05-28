@@ -20,6 +20,7 @@ public class Typing extends Application {
         BorderPane root = new BorderPane();
 
         StackPane main = new StackPane();
+        /*test*/
 
         TypingController controller = new TypingController(main);
 
