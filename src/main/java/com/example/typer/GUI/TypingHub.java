@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -19,7 +20,7 @@ public class TypingHub extends Application {
         db.connect();
         BorderPane root = new BorderPane();
 
-        VBox main = new VBox();
+        StackPane main = new StackPane();
 
         TypingController controller = new TypingController(main);
 

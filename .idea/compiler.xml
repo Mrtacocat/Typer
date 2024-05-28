@@ -9,8 +9,5 @@
         <module name="Typer" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Typer" target="17" />
-    </bytecodeTargetLevel>
   </component>
 </project>
