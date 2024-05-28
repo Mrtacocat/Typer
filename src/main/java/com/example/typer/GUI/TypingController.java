@@ -1,9 +1,7 @@
 package com.example.typer.GUI;
 
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 import java.io.File;
 import java.io.FileNotFoundException;
