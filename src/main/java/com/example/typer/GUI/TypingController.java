@@ -1,7 +1,15 @@
 package com.example.typer.GUI;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,14 +20,21 @@ import java.util.Scanner;
 
 public class TypingController {
 
-    private TextField typingInputField;
+    private TextArea typingInputField;
+    private TextFlow typingOutputField;
 
-    public TypingController(StackPane root) {
-        typingInputField = new TextField();
-        typingInputField.setStyle("-fx-background-color: transparent; -fx-text-fill: black; -fx-border-color: transparent; -fx-font-size: 14px;");
+    public TypingController(VBox root) {
+        root.setAlignment(Pos.CENTER);
+        root.setSpacing(20);
 
-        TextField text = new TextField();
-        text.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 14px;");
+        typingInputField = new TextArea();
+        typingInputField.setWrapText(true);
+        typingInputField.setMaxWidth(300);
+        typingInputField.setMaxHeight(200);
+
+
+        typingOutputField = new TextFlow();
+
 
         List<String> words = new ArrayList<>();
 
@@ -44,14 +59,38 @@ public class TypingController {
             String randomWord = words.get(randomIndex);
             System.out.print(randomWord + " ");
             promptTextBuilder.append(randomWord).append(" ");
+
         }
 
-        String promptText = promptTextBuilder.toString();
-        text.setPromptText(promptText);
-
-        root.getChildren().addAll(text, typingInputField);
-
+        String promptTexts = promptTextBuilder.toString();
+        updateTextFlow(promptTexts, "");
+        // Add listener to textarea's text property to handle character-by-character comparison
 
 
+        // Add listener to textarea's text property to handle character-by-character comparison
+        typingInputField.textProperty().addListener((observable, oldValue, newValue) -> {
+            updateTextFlow(promptTexts, newValue);
+        });
+        root.getChildren().addAll(typingOutputField, typingInputField);
+
+    }
+
+    private void updateTextFlow(String promptText, String typedText) {
+        typingOutputField.getChildren().clear();
+
+        for (int i = 0; i < promptText.length(); i++) {
+            char promptChar = promptText.charAt(i);
+            Text textNode = new Text(String.valueOf(promptChar));
+
+            if (i < typedText.length() && promptChar == typedText.charAt(i)) {
+                textNode.setFill(Color.GREEN);
+            } else if (i < typedText.length() && promptChar != typedText.charAt(i)){
+                textNode.setFill(Color.RED);
+            } else {
+                textNode.setFill(Color.BLACK);
+            }
+
+            typingOutputField.getChildren().add(textNode);
+        }
     }
 }

@@ -16,11 +16,11 @@ import java.io.IOException;
 public class TypingHub extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        //atabase db = new Database();
+        //Database db = new Database();
         //db.connect();
         BorderPane root = new BorderPane();
 
-        StackPane main = new StackPane();
+        VBox main = new VBox();
 
         TypingController controller = new TypingController(main);
 
