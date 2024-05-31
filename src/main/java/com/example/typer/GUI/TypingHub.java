@@ -16,8 +16,8 @@ import java.io.IOException;
 public class TypingHub extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        Database db = new Database();
-        db.connect();
+        //atabase db = new Database();
+        //db.connect();
         BorderPane root = new BorderPane();
 
         StackPane main = new StackPane();
@@ -25,7 +25,7 @@ public class TypingHub extends Application {
         TypingController controller = new TypingController(main);
 
         root.setCenter(main);
-        db.InstertDoc();
+       // db.InstertDoc();
         ToolBar toolbar = new ToolBar(
                 new Button("New"),
                 new Button("Save"),
@@ -33,7 +33,7 @@ public class TypingHub extends Application {
         );
 
         root.setTop(toolbar);
-        Scene scene = new Scene(root, 320, 240);
+        Scene scene = new Scene(root, 720, 480);
         stage.setTitle("Typer");
         stage.setScene(scene);
         stage.show();

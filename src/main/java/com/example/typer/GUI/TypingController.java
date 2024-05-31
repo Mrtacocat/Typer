@@ -16,18 +16,18 @@ public class TypingController {
 
     public TypingController(StackPane root) {
         typingInputField = new TextField();
-        typingInputField.setStyle("-fx-background-color: transparent; -fx-text-fill: black; ");
+        typingInputField.setStyle("-fx-background-color: transparent; -fx-text-fill: black; -fx-border-color: transparent; -fx-font-size: 14px;");
 
         TextField text = new TextField();
-        text.setPromptText("test test test");
+        text.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 14px;");
 
         List<String> words = new ArrayList<>();
 
         try {
-            Scanner scanner = new Scanner(new File("src/main/java/com/example/typer/Backend/words.txt"));
+            Scanner scanner = new Scanner(new File("src/main/java/com/example/typer/Backend/common-words"));
 
-            while (scanner.hasNextLine()) {
-                String data = scanner.nextLine();
+            while (scanner.hasNext()) {
+                String data = scanner.next();
                 words.add(data);
             }
             scanner.close();
@@ -37,12 +37,17 @@ public class TypingController {
         }
 
         Random random = new Random();
+        StringBuilder promptTextBuilder = new StringBuilder();
+
         for (int i = 0; i < 20; i++) {
             int randomIndex = random.nextInt(words.size());
             String randomWord = words.get(randomIndex);
-            System.out.println(randomWord);
-            text.setPromptText(randomWord);
+            System.out.print(randomWord + " ");
+            promptTextBuilder.append(randomWord).append(" ");
         }
+
+        String promptText = promptTextBuilder.toString();
+        text.setPromptText(promptText);
 
         root.getChildren().addAll(text, typingInputField);
 
