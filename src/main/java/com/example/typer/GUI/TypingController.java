@@ -1,5 +1,7 @@
 package com.example.typer.GUI;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -12,22 +14,24 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.time.LocalTime;
+import java.util.*;
 
 public class TypingController {
 
     private TextArea typingInputField;
     private TextFlow typingOutputField;
+    private LocalTime startTime;
+    private Timeline timer;
 
     public TypingController(VBox root) {
         root.setAlignment(Pos.CENTER);
         root.setSpacing(20);
+
 
         typingInputField = new TextArea();
         typingInputField.setWrapText(true);
@@ -35,6 +39,12 @@ public class TypingController {
         typingInputField.setMaxHeight(100);
         typingInputField.setFont(Font.font(16));
 
+        typingInputField.setOnKeyTyped(e -> {
+            if (startTime == null) {
+                startTime = LocalTime.now();
+                startTimer();
+            }
+        });
 
         typingOutputField = new TextFlow();
         typingOutputField.setTextAlignment(TextAlignment.CENTER);
@@ -44,6 +54,10 @@ public class TypingController {
 
         List<String> words = new ArrayList<>();
 
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+
+
         try {
             Scanner scanner = new Scanner(new File("src/main/java/com/example/typer/Backend/common-words"));
 
@@ -51,6 +65,7 @@ public class TypingController {
                 String data = scanner.next();
                 words.add(data);
             }
+
             scanner.close();
 
         } catch (FileNotFoundException e) {
@@ -64,19 +79,19 @@ public class TypingController {
             int randomIndex = random.nextInt(words.size());
             String randomWord = words.get(randomIndex);
             promptTextBuilder.append(randomWord).append(" ");
-
         }
 
         String promptTexts = promptTextBuilder.toString();
         updateTextFlow(promptTexts, "");
-        // Add listener to textarea's text property to handle character-by-character comparison
 
 
-        // Add listener to textarea's text property to handle character-by-character comparison
-        typingInputField.textProperty().addListener((observable, oldValue, newValue) -> {
+      typingInputField.textProperty().addListener((observable, oldValue, newValue) -> {
             updateTextFlow(promptTexts, newValue);
         });
-        root.getChildren().addAll(typingOutputField, typingInputField);
+
+
+        root.getChildren().addAll( typingOutputField, typingInputField);
+
 
     }
 
@@ -94,8 +109,33 @@ public class TypingController {
             } else {
                 textNode.setFill(Color.BLACK);
             }
-
+            
             typingOutputField.getChildren().add(textNode);
         }
+
+    }
+
+    private void startTimer() {
+        timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> calculateWPM()));
+        timer.setCycleCount(Timeline.INDEFINITE);
+        timer.play();
+    }
+
+    private void stopTimer() {
+        if (timer != null) {
+            timer.stop();
+        }
+    }
+
+    private void calculateWPM() {
+        if (startTime == null) {
+            return;
+        }
+        double elapsedTime = LocalTime.now().toNanoOfDay() - startTime.toNanoOfDay();
+        double seconds = elapsedTime / 1_000_000_000.0;
+        int numChars = typingInputField.getText().length();
+
+        int wpm = (int) ((((double) numChars / 5) / seconds) * 60);
+        System.out.println("Your WPM is " + wpm);
     }
 }
