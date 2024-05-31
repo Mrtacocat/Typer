@@ -1,19 +1,16 @@
 package com.example.typer.GUI;
 
-import com.example.typer.Backend.Database;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class TypingHub extends Application {
+public class Typing extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         //Database db = new Database();
@@ -26,11 +23,18 @@ public class TypingHub extends Application {
 
         root.setCenter(main);
        // db.InstertDoc();
+        Button restart;
+
         ToolBar toolbar = new ToolBar(
-                new Button("New"),
+                restart = new Button("Restart"),
                 new Button("Save"),
                 new Button("Profile")
         );
+
+        restart.setOnAction(event -> {
+            main.getChildren().clear();
+            new TypingController(main);
+        });
 
         root.setTop(toolbar);
         Scene scene = new Scene(root, 720, 480);

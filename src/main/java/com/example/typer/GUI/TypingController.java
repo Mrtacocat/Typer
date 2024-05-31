@@ -8,7 +8,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
 import java.io.File;
@@ -29,11 +31,15 @@ public class TypingController {
 
         typingInputField = new TextArea();
         typingInputField.setWrapText(true);
-        typingInputField.setMaxWidth(300);
-        typingInputField.setMaxHeight(200);
+        typingInputField.setMaxWidth(500);
+        typingInputField.setMaxHeight(100);
+        typingInputField.setFont(Font.font(16));
 
 
         typingOutputField = new TextFlow();
+        typingOutputField.setTextAlignment(TextAlignment.CENTER);
+        typingOutputField.setStyle("-fx-font-size: 16;");
+        typingOutputField.setMaxWidth(600);
 
 
         List<String> words = new ArrayList<>();
@@ -57,7 +63,6 @@ public class TypingController {
         for (int i = 0; i < 20; i++) {
             int randomIndex = random.nextInt(words.size());
             String randomWord = words.get(randomIndex);
-            System.out.print(randomWord + " ");
             promptTextBuilder.append(randomWord).append(" ");
 
         }
