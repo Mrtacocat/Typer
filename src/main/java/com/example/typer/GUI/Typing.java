@@ -23,6 +23,7 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -165,7 +166,27 @@ public class Typing extends Application {
 
         int wpm = (int) ((((double) numChars / 5) / seconds) * 60);
         wpmLabel.setText("WPM: " + Integer.toString(wpm));
+        setHighscore(wpm);
 
+    }
+
+    public void setHighscore(int totalScore) {
+        FileWriter writeFile = null;
+        int value = 0;
+        try {
+            writeFile = new FileWriter("src/main/java/com/example/typer/Backend/Highscore");
+            writeFile.write("" + totalScore);
+        } catch (IOException e) {
+            // return 0 if file is not found
+        } finally {
+            try {
+                if(writeFile != null) {
+                    writeFile.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
