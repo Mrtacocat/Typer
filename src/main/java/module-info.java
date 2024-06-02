@@ -13,7 +13,6 @@ module com.example.typer {
     requires org.mongodb.bson;
     requires org.mongodb.driver.sync.client;
 
-    opens com.example.typer to javafx.fxml;
     exports com.example.typer.GUI;
     opens com.example.typer.GUI to javafx.fxml;
 }

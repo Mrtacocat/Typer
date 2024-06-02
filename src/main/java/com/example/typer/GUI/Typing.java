@@ -9,9 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -26,10 +24,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
+
 
 public class Typing extends Application {
 
@@ -49,6 +45,7 @@ public class Typing extends Application {
         main.setSpacing(20);
         wpmLabel = new Label("WPM: 0");
         wpmLabel.setFont(Font.font(16));
+        wpmLabel.setTextFill(Color.WHITE);
 
         inputField = new TextArea();
         inputField.setWrapText(true);
@@ -88,7 +85,7 @@ public class Typing extends Application {
         Random random = new Random();
         StringBuilder promptTextBuilder = new StringBuilder();
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 50; i++) {
             int randomIndex = random.nextInt(words.size());
             String randomWord = words.get(randomIndex);
             promptTextBuilder.append(randomWord).append(" ");
@@ -119,7 +116,10 @@ public class Typing extends Application {
         });
 
         root.setTop(toolbar);
+
+        String mainPage = this.getClass().getResource("/com/example/typer/style.css").toExternalForm();
         Scene scene = new Scene(root, 720, 480);
+        scene.getStylesheets().add(mainPage);
         stage.setTitle("Typer");
         stage.setScene(scene);
         stage.show();
@@ -136,7 +136,7 @@ public class Typing extends Application {
             } else if (i < typedText.length() && promptChar != typedText.charAt(i)) {
                 textNode.setFill(Color.RED);
             } else {
-                textNode.setFill(Color.BLACK);
+                textNode.setFill(Color.web("#636669"));
             }
 
             outputField.getChildren().add(textNode);
