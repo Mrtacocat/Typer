@@ -47,7 +47,6 @@ public class Typing extends Application {
 
         main.setAlignment(Pos.CENTER);
         main.setSpacing(20);
-
         wpmLabel = new Label("WPM: 0");
         wpmLabel.setFont(Font.font(16));
 
@@ -148,12 +147,18 @@ public class Typing extends Application {
         timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> getWPM()));
         timer.setCycleCount(Timeline.INDEFINITE);
         timer.play();
+        Timeline endTimer = new Timeline(new KeyFrame(Duration.seconds(30), event -> {
+            stopTimer();
+        }));
+        endTimer.setCycleCount(1);
+        endTimer.play();
     }
 
     private void stopTimer() {
         if (timer != null) {
             timer.stop();
         }
+        calculateFinalWPM();
     }
 
     private void getWPM() {
@@ -162,12 +167,35 @@ public class Typing extends Application {
         }
         double elapsedTime = LocalTime.now().toNanoOfDay() - startTime.toNanoOfDay();
         double seconds = elapsedTime / 1_000_000_000.0;
-        int numChars = inputField.getText().length();
+        int numChars = countCorrectWords();
 
         int wpm = (int) ((((double) numChars / 5) / seconds) * 60);
         wpmLabel.setText("WPM: " + Integer.toString(wpm));
-        setHighscore(wpm);
 
+    }
+
+    private void calculateFinalWPM() {
+        if (startTime == null) {
+            return;
+        }
+        double elapsedTime = LocalTime.now().toNanoOfDay() - startTime.toNanoOfDay();
+        double seconds = elapsedTime / 1_000_000_000.0;
+        int numChars = countCorrectWords();
+
+        int wpm = (int) ((((double) numChars / 5) / seconds) * 60);
+        wpmLabel.setText("Final WPM: " + wpm);
+        setHighscore(wpm);
+    }
+
+    private int countCorrectWords() {
+        int count = 0;
+        for (int i = 0; i < outputField.getChildren().size(); i++) {
+            Text textnode = (Text) outputField.getChildren().get(i);
+            if (textnode.getFill().equals(Color.GREEN)) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public void setHighscore(int totalScore) {
