@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -35,14 +36,40 @@ public class Typing extends Application {
     private TextFlow outputField;
     private LocalTime startTime;
     private Timeline timer;
+    private BorderPane root;
+    private ToolBar toolbar;
+    private List<String> words;
+    private String promptTexts;
 
     @Override
     public void start(Stage stage) throws IOException {
-        BorderPane root = new BorderPane();
+        root = new BorderPane();
         main = new VBox();
 
+        toolbar = new ToolBar(
+                new Button("Restart"),
+                new Button("Save"),
+                new Button("Profile")
+        );
+
+        ((Button) toolbar.getItems().get(0)).setOnAction(event -> resetGUI());
+
+        initializeGUI();
+
+
+        String mainPage = this.getClass().getResource("/com/example/typer/style.css").toExternalForm();
+        Scene scene = new Scene(root, 720, 480);
+        scene.getStylesheets().add(mainPage);
+
+        stage.setTitle("Typer");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void initializeGUI() {
         main.setAlignment(Pos.CENTER);
         main.setSpacing(20);
+
         wpmLabel = new Label("WPM: 0");
         wpmLabel.setFont(Font.font(16));
         wpmLabel.setTextFill(Color.WHITE);
@@ -65,7 +92,7 @@ public class Typing extends Application {
         outputField.setStyle("-fx-font-size: 16;");
         outputField.setMaxWidth(600);
 
-        List<String> words = new ArrayList<>();
+        words = new ArrayList<>();
 
 
         try {
@@ -91,7 +118,7 @@ public class Typing extends Application {
             promptTextBuilder.append(randomWord).append(" ");
         }
 
-        String promptTexts = promptTextBuilder.toString();
+        promptTexts = promptTextBuilder.toString();
         updateTextFlow(promptTexts, "");
 
 
@@ -102,27 +129,8 @@ public class Typing extends Application {
 
         main.getChildren().addAll(wpmLabel, outputField, inputField);
         root.setCenter(main);
-
-        Button restart;
-
-        ToolBar toolbar = new ToolBar(
-                restart = new Button("Restart"),
-                new Button("Save"),
-                new Button("Profile")
-        );
-
-        restart.setOnAction(event -> {
-            main.getChildren().clear();
-        });
-
         root.setTop(toolbar);
 
-        String mainPage = this.getClass().getResource("/com/example/typer/style.css").toExternalForm();
-        Scene scene = new Scene(root, 720, 480);
-        scene.getStylesheets().add(mainPage);
-        stage.setTitle("Typer");
-        stage.setScene(scene);
-        stage.show();
     }
     private void updateTextFlow(String promptText, String typedText) {
         outputField.getChildren().clear();
@@ -203,7 +211,7 @@ public class Typing extends Application {
         int value = 0;
         try {
             writeFile = new FileWriter("src/main/java/com/example/typer/Backend/Highscore");
-            writeFile.write("" + totalScore);
+            writeFile.write("Score:" + totalScore);
         } catch (IOException e) {
             // return 0 if file is not found
         } finally {
@@ -217,8 +225,11 @@ public class Typing extends Application {
         }
     }
 
-
-
+    private void resetGUI() {
+        // Clear the main VBox and re-initialize the GUI
+        main.getChildren().clear();
+        initializeGUI();
+    }
 
     public static void main(String[] args) {
         launch();
