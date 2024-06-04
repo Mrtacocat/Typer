@@ -20,10 +20,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -155,7 +152,7 @@ public class Typing extends Application {
         timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> getWPM()));
         timer.setCycleCount(Timeline.INDEFINITE);
         timer.play();
-        Timeline endTimer = new Timeline(new KeyFrame(Duration.seconds(30), event -> {
+        Timeline endTimer = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
             stopTimer();
         }));
         endTimer.setCycleCount(1);
@@ -207,21 +204,13 @@ public class Typing extends Application {
     }
 
     public void setHighscore(int totalScore) {
-        FileWriter writeFile = null;
-        int value = 0;
         try {
-            writeFile = new FileWriter("src/main/java/com/example/typer/Backend/Highscore");
-            writeFile.write("Score:" + totalScore);
+            BufferedWriter writer = new BufferedWriter(new FileWriter("src/main/java/com/example/typer/Backend/Highscore", true));
+            writer.write("" + totalScore);
+            writer.newLine();
+            writer.close();
         } catch (IOException e) {
-            // return 0 if file is not found
-        } finally {
-            try {
-                if(writeFile != null) {
-                    writeFile.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
         }
     }
 
