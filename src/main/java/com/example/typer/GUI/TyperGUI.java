@@ -1,5 +1,6 @@
 package com.example.typer.GUI;
 
+import com.example.typer.Backend.Highscore;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -9,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -25,7 +25,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 
-public class Typing extends Application {
+public class TyperGUI extends Application {
 
     private VBox main;
     protected Label wpmLabel;
@@ -37,6 +37,8 @@ public class Typing extends Application {
     private ToolBar toolbar;
     private List<String> words;
     private String promptTexts;
+    private final String name = "";
+    Highscore highscore = new Highscore();
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -50,8 +52,10 @@ public class Typing extends Application {
         );
 
         ((Button) toolbar.getItems().get(0)).setOnAction(event -> resetGUI());
+        ((Button) toolbar.getItems().get(2)).setOnAction(event -> openProfile());
 
         initializeGUI();
+        System.out.println(highscore.getHighscore());
 
 
         String mainPage = this.getClass().getResource("/com/example/typer/style.css").toExternalForm();
@@ -153,17 +157,23 @@ public class Typing extends Application {
         timer.setCycleCount(Timeline.INDEFINITE);
         timer.play();
         Timeline endTimer = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
-            stopTimer();
+            stopTimerAndCalc();
         }));
         endTimer.setCycleCount(1);
         endTimer.play();
+    }
+
+    private void stopTimerAndCalc() {
+        if (timer != null) {
+            timer.stop();
+        }
+        calculateFinalWPM();
     }
 
     private void stopTimer() {
         if (timer != null) {
             timer.stop();
         }
-        calculateFinalWPM();
     }
 
     private void getWPM() {
@@ -189,7 +199,7 @@ public class Typing extends Application {
 
         int wpm = (int) ((((double) numChars / 5) / seconds) * 60);
         wpmLabel.setText("Final WPM: " + wpm);
-        setHighscore(wpm);
+        highscore.setHighscore(wpm);
     }
 
     private int countCorrectWords() {
@@ -203,21 +213,16 @@ public class Typing extends Application {
         return count;
     }
 
-    public void setHighscore(int totalScore) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("src/main/java/com/example/typer/Backend/Highscore", true));
-            writer.write("" + totalScore);
-            writer.newLine();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void resetGUI() {
         // Clear the main VBox and re-initialize the GUI
         main.getChildren().clear();
         initializeGUI();
+    }
+
+    private void openProfile() {
+        ProfileGUI profile = new ProfileGUI();
+        profile.openProfileWindow();
+        stopTimer();
     }
 
     public static void main(String[] args) {
