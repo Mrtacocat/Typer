@@ -4,14 +4,11 @@ import com.example.typer.Backend.Highscore;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ToolBar;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -37,6 +34,7 @@ public class TyperGUI extends Application {
     private ToolBar toolbar;
     private List<String> words;
     private String promptTexts;
+    private TabPane tabPane;
     private final String name = "";
     Highscore highscore = new Highscore();
 
@@ -51,8 +49,19 @@ public class TyperGUI extends Application {
                 new Button("Profile")
         );
 
+        tabPane = new TabPane();
+
+        Tab tab1 = new Tab("Home", new Label("Homepage"));
+
+        tabPane.getTabs().add(tab1);
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+
         ((Button) toolbar.getItems().get(0)).setOnAction(event -> resetGUI());
-        ((Button) toolbar.getItems().get(2)).setOnAction(event -> openProfile());
+        ((Button) toolbar.getItems().get(2)).setOnAction(event -> {
+            Stage stager = (Stage) toolbar.getItems().get(2).getScene().getWindow();
+            stager.close();
+            openProfile();
+        });
 
         initializeGUI();
         System.out.println(highscore.getHighscore());
@@ -129,8 +138,9 @@ public class TyperGUI extends Application {
 
 
         main.getChildren().addAll(wpmLabel, outputField, inputField);
+        root.setTop(tabPane);
         root.setCenter(main);
-        root.setTop(toolbar);
+        root.setBottom(toolbar);
 
     }
     private void updateTextFlow(String promptText, String typedText) {
@@ -200,6 +210,7 @@ public class TyperGUI extends Application {
         int wpm = (int) ((((double) numChars / 5) / seconds) * 60);
         wpmLabel.setText("Final WPM: " + wpm);
         highscore.setHighscore(wpm);
+        inputField.setEditable(false);
     }
 
     private int countCorrectWords() {
@@ -223,6 +234,7 @@ public class TyperGUI extends Application {
         ProfileGUI profile = new ProfileGUI();
         profile.openProfileWindow();
         stopTimer();
+
     }
 
     public static void main(String[] args) {
