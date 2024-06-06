@@ -52,6 +52,7 @@ public class TyperGUI extends Application {
         tabPane = new TabPane();
 
         Tab tab1 = new Tab("Home", new Label("Homepage"));
+        Tab tab2 = new Tab("Profile", new Label("Profilepage"));
 
         tabPane.getTabs().add(tab1);
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
