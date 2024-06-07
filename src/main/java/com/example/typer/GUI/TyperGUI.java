@@ -4,7 +4,6 @@ import com.example.typer.Backend.Highscore;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -34,7 +33,6 @@ public class TyperGUI extends Application {
     private ToolBar toolbar;
     private List<String> words;
     private String promptTexts;
-    private TabPane tabPane;
     private final String name = "";
     Highscore highscore = new Highscore();
 
@@ -49,13 +47,6 @@ public class TyperGUI extends Application {
                 new Button("Profile")
         );
 
-        tabPane = new TabPane();
-
-        Tab tab1 = new Tab("Home", new Label("Homepage"));
-        Tab tab2 = new Tab("Profile", new Label("Profilepage"));
-
-        tabPane.getTabs().add(tab1);
-        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         ((Button) toolbar.getItems().get(0)).setOnAction(event -> resetGUI());
         ((Button) toolbar.getItems().get(2)).setOnAction(event -> {
@@ -139,7 +130,6 @@ public class TyperGUI extends Application {
 
 
         main.getChildren().addAll(wpmLabel, outputField, inputField);
-        root.setTop(tabPane);
         root.setCenter(main);
         root.setBottom(toolbar);
 
